@@ -20,7 +20,7 @@ def twitter_setup():
 
 extractor = twitter_setup()
 
-tweets = extractor.user_timeline(screen_name='realDonaldTrump', count=3200)
+tweets = extractor.user_timeline(screen_name='realDonaldTrump', count=200)
 print('Number of tweets extracted: {}.\n'.format(len(tweets)))
 
 print('5 recent tweets:\n')
