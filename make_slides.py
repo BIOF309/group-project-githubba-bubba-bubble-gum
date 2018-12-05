@@ -63,4 +63,4 @@ def make_slides(path: str = 'slides.md', framework: str = 'slidy') -> str:
 
 if __name__ == '__main__':
     doctest.testmod(verbose=True)
-    write_file('slides.html', make_slides())
+    write_file('slides.html', make_slides('FInal_Project.md'))
