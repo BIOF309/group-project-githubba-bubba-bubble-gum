@@ -42,9 +42,9 @@
 </div>
 <div id="word-frequency-analysis" class="slide section level1">
 <h1>Word Frequency Analysis</h1>
-<p>Useful for liguistic analyses as they:</p>
+<p>Useful for linguistic analyses as they:</p>
 <ul>
-<li><p>give insight into the verncular of individuals and groups of people in specific regions during particular periods of time.</p></li>
+<li><p>give insight into the vernacular of individuals and groups of people in specific regions during particular periods of time.</p></li>
 <li><p>provide information on trending topics</p></li>
 </ul>
 <p><img src="https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2017/06/14/blogtrumptweetenemypeoplerevised0.jpg" /></p>
@@ -148,7 +148,13 @@ get_all_tweets(user_name)
 # name the CSV using the twitter handle you are analyzing
 filename = &quot;%s_tweets.csv&quot; % (user_name)
 f2 = open(filename)</code></pre>
-<p># Filter the data 1. Remove retweets 2. Exclude numbers, twitter handles, urls, prepositions, punctuation</p>
+</div>
+<div id="filter-the-data" class="slide section level1">
+<h1>Filter the data</h1>
+<ol style="list-style-type: decimal">
+<li>Remove retweets</li>
+<li>Exclude numbers, twitter handles, urls, prepositions, punctuation</li>
+</ol>
 <pre><code> ### split tweets into 2 lists: retweets and orig_tweets ###
 retweets = [] # can ignore this list, since we are not analyzing retweets
 orig_tweets = []

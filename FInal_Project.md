@@ -18,9 +18,9 @@
 ![](https://cdn-images-1.medium.com/max/1000/1*6G79y5SStkXsFVcgDU7wTw.jpeg)
  
 # Word Frequency Analysis
-   Useful for liguistic analyses as they:
+   Useful for linguistic analyses as they:
    
-   * give insight into the verncular of individuals and groups of people in specific regions during particular periods of time.
+   * give insight into the vernacular of individuals and groups of people in specific regions during particular periods of time.
         
    * provide information on trending topics
    
@@ -126,7 +126,8 @@
     # name the CSV using the twitter handle you are analyzing
     filename = "%s_tweets.csv" % (user_name)
     f2 = open(filename)
- # Filter the data 
+# Filter the data 
+ 
    1. Remove retweets
    2. Exclude numbers, twitter handles, urls, prepositions, punctuation
    
