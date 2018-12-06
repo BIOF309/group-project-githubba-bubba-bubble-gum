@@ -150,8 +150,8 @@ normalize_plurals=True).generate_from_frequencies(threshold_counts)
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 plt.show()
-#plt.savefig("tweet_word_cloud_{}.png".format(user_name))
-#plt.close()
+plt.savefig("tweet_word_cloud_{}.png".format(user_name))
+plt.close()
 
 ### barplot trying to add words to x-ticks when above a new threshold ###
 # t_names = list(threshold_counts.keys())
@@ -166,14 +166,3 @@ plt.show()
 # plt.xlabel("word")
 # plt.savefig("tweet2_{}.png".format(user_name))
 # plt.close()
-
-
-
-
-            
-    
-
-
-
-
-        
