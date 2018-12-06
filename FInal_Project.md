@@ -126,8 +126,7 @@
     # name the CSV using the twitter handle you are analyzing
     filename = "%s_tweets.csv" % (user_name)
     f2 = open(filename)
-
-   # Filter the data 
+ # Filter the data 
    1. Remove retweets
    2. Exclude numbers, twitter handles, urls, prepositions, punctuation
    
@@ -203,9 +202,13 @@
    
    
 # RESULTS!
-![caption](group-project-githubba-bubba-bubble-gum/tweet_word_cloud_realDonaldTrump.jpeg)
 
-![group-project-githubba-bubba-bubble-gum](tweet_word_cloud_realDonaldTrump.jpg)
+
+
+# Next steps
+ 1. Clean the data
+ 2. Fix 'b' in front of some words (an artifact of the words being byte objects)
+ 
 
     
     
