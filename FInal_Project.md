@@ -204,7 +204,7 @@
    
 # RESULTS!
 
-![](src/visualization/tweet_word_cloud_realDonaldTrump.png)
+![](src/visualization/tweet_word_cloud_realDonaldTrump2.png)
 
 # Next steps
  1. Clean the data

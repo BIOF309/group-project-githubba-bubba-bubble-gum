@@ -1,243 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
- "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
-  <title>Final_Project</title>
-  <style type="text/css">
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <link rel="stylesheet" type="text/css" media="screen, projection, print"
-    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
-  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
-    charset="utf-8" type="text/javascript"></script>
-</head>
-<body>
-<div id="word-frequency-analysis-of-trumps-most-recent-tweets" class="slide section level1">
-<h1><strong>Word Frequency Analysis of Trump’s Most Recent Tweets</strong></h1>
-<p>By Gianna Tricola and Michael Custance <img src="https://cdn.cnn.com/cnnnext/dam/assets/180219165402-20180219-trump-twitter-composite-generic-full-169.jpg" /></p>
-</div>
-<div id="twitter-as-a-data-source" class="slide section level1">
-<h1>Twitter as a data source</h1>
-<ol style="list-style-type: decimal">
-<li>Public access</li>
-<li>Diverse user base</li>
-</ol>
-<p><img src="https://cdn.wccftech.com/wp-content/uploads/2018/02/Twitter.jpeg" /></p>
-</div>
-<div id="trump-as-a-subject" class="slide section level1">
-<h1>Trump as a subject</h1>
-<ol style="list-style-type: decimal">
-<li>Influential</li>
-<li>Controversial</li>
-<li>Entertaining</li>
-</ol>
-<p><img src="https://cdn-images-1.medium.com/max/1000/1*6G79y5SStkXsFVcgDU7wTw.jpeg" /></p>
-</div>
-<div id="word-frequency-analysis" class="slide section level1">
-<h1>Word Frequency Analysis</h1>
-<p>Useful for linguistic analyses as they:</p>
-<ul>
-<li><p>give insight into the vernacular of individuals and groups of people in specific regions during particular periods of time.</p></li>
-<li><p>provide information on trending topics</p></li>
-</ul>
-<p><img src="https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2017/06/14/blogtrumptweetenemypeoplerevised0.jpg" /></p>
-</div>
-<div id="first-steps" class="slide section level1">
-<h1>First Steps</h1>
-<ol style="list-style-type: decimal">
-<li>Twitter account</li>
-<li>Submit request for Twitter developer account</li>
-<li>Access the API tokens / Consumer keys</li>
-<li>Install Tweepy</li>
-</ol>
-<p><img src="https://d3hptxmced6nen.cloudfront.net/images/autotweet-documentation/twitter/twitterdev/twitterdev-tutorial-04.png" /></p>
-</div>
-<div id="import-twitter-data" class="slide section level1">
-<h1>Import Twitter Data</h1>
-<ol style="list-style-type: decimal">
-<li>Import necessary packages</li>
-<li>Assign API’s and Access Tokens to variables</li>
-<li>Create function to pull data from twitter</li>
-<li>Convert data into csv file</li>
-</ol>
-<pre><code> # import necessary packages
-import pip, csv, json, tweepy, fnmatch, string
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-from collections import Counter
-from wordcloud import WordCloud
-from PIL import Image
-
-### get in twitter environment ###
-### source activate twitter ###
-consumer_key = &#39;kbMAphoqE5gMUJIofDwRAA8Mm&#39; # API Key
-consumer_secret = &#39;8XiLrPhol1L6FVxHGXgQgNEh0ngvUx5xlQUXny0ZiI6Q0Uue7I&#39; # API Secret
-access_key = &#39;878766942085156865-IOJccRODzhK4JsQGHfu0s6k5geBoZMs&#39; # Access Token
-access_secret = &#39;dlZbMrubLkzLTbnvq32htRoR4seZHrym4n2MxOwE0o0hx&#39; # Access Token Secret
-
-
-### ping a twitter account and extract tweets ###
-### https://gist.github.com/yanofsky/5436496 but change python2 things to python3 ###
-def get_all_tweets(screen_name):
-
-# Twitter only allows access to a users most recent ~3240 tweets with this method
-
-# authorize twitter, initialize tweepy
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_key, access_secret)
-api = tweepy.API(auth)
-
-# initialize a list to hold all the tweepy Tweets
-alltweets = []  
-
-# make initial request for most recent tweets (200 is the maximum allowed count)
-new_tweets = api.user_timeline(screen_name = screen_name,count=200)
-
-# save most recent tweets into alltweets list
-alltweets.extend(new_tweets)
-
-# save the id of the next tweet that wasn&#39;t originally pulled
-oldest = alltweets[-1].id - 1
-
-# keep grabbing tweets until there are no tweets left to grab
-while len(new_tweets) &gt; 0:
-    print(&quot;getting tweets before %s&quot; % (oldest))
-    
-    # all subsequent requests use the max_id paramater to prevent duplicates and pull the next group of tweets
-    new_tweets = api.user_timeline(screen_name = screen_name,count=200,max_id=oldest)
-    
-    # save most recent tweets into alltweets list
-    alltweets.extend(new_tweets)
-
-    # save the id of the next tweet that wasn&#39;t originally pulled
-    oldest = alltweets[-1].id - 1
-    
-    print(&quot;...%s tweets downloaded so far&quot; % (len(alltweets)))
-
-# transform the tweepy tweets into a 2D array that will populate the csv
-outtweets = [[tweet.text.encode(&quot;utf-8&quot;)] for tweet in alltweets]
-
-# return outtweets
-
-
-# write utf-8 converted tweets into a csv file
-with open(&#39;%s_tweets.csv&#39; % screen_name, &#39;w&#39;) as f:
-    writer = csv.writer(f)
-
-    writer.writerows(outtweets)
-
-pass
-
-  if __name__ == &#39;__main__&#39;:
-    # pass in the username of the account you want extract the tweets from
-user_name = &#39;realDonaldTrump&#39; # can input a different twitter handle here to analyze
-get_all_tweets(user_name)
-
-# pd.read_csv(&#39;realDonaldTrump_tweets.csv&#39;)
-
-
-# name the CSV using the twitter handle you are analyzing
-filename = &quot;%s_tweets.csv&quot; % (user_name)
-f2 = open(filename)</code></pre>
-</div>
-<div id="filter-the-data" class="slide section level1">
-<h1>Filter the data</h1>
-<ol style="list-style-type: decimal">
-<li>Remove retweets</li>
-<li>Exclude numbers, twitter handles, urls, prepositions, punctuation</li>
-</ol>
-<pre><code> ### split tweets into 2 lists: retweets and orig_tweets ###
-retweets = [] # can ignore this list, since we are not analyzing retweets
-orig_tweets = []
-for tweet in f2:
- # print(tweet)
-if &quot;RT&quot; in tweet:
-    retweets.append(tweet)
-    # continue # if you want to skip these tweets rather than assigning them to the list retweets
-else:
-    orig_tweets.append(tweet)
-
-# print(orig_tweets)
-# print(retweets)
-# print(len(orig_tweets))
-# print(len(retweets))
-
-### from orig_tweets, exclude words that contain numbers, @, or url&#39;s into word_list ###
-unwanted_word_list = []
-word_list = []
-for tweet in orig_tweets:
-    # print(tweet)
-fields = tweet.strip(&quot;\r\n&quot;).split() # splits strings in orig_tweets into lists of strings
-# print(fields)                       # where each word is it&#39;s own string
-for word in fields:
-    # print(word)
-    ### exclude meaningless words, twitter handles, numbers, and URLs ###
-    exclusions = [&quot;*https://*&quot;, &quot;*@*&quot;, &quot;*1*&quot;, &quot;*2*&quot;, &quot;*3*&quot;, &quot;*4*&quot;,
-     &quot;*5*&quot;, &quot;*6*&quot;, &quot;*7*&quot;, &quot;*8*&quot;, &quot;*9*&quot;, &quot;*0*&quot;, &quot;the&quot;, &quot;a&quot;, &quot;and&quot;, &quot;to&quot;, &quot;on&quot;, &quot;is&quot;, &quot;in&quot;, &quot;of&quot;, &quot;in&quot;,
-      &quot;for&quot;, &quot;with&quot;, &quot;that&quot;, &quot;be&quot;, &quot;will&quot;, &quot;it&quot;, &quot;as&quot;, &quot;was&quot;, &quot;at&quot;, &quot;are&quot;, &quot;this&quot;, &quot;from&quot;]
-    if any(fnmatch.fnmatch(word, exclusion) for exclusion in exclusions):
-        unwanted_word_list.append(word)
-        # continue # if you want to skip these tweets
-    else:
-        translator = str.maketrans(&#39;&#39;, &#39;&#39;, string.punctuation) # remove punctuation from word strings
-        word = word.translate(translator)
-        word_list.append(word.lower()) # make all characters lowercase so identical words don&#39;t read differently
-
-# print(unwanted_word_list)
-# print(word_list)
-# print(len(unwanted_word_list))
-# print(len(word_list))</code></pre>
-</div>
-<div id="processed-data" class="slide section level1">
-<h1>Processed data</h1>
-<ol style="list-style-type: decimal">
-<li>Generate a dictionary that gives word: frequency as a key: value pair</li>
-<li><p>Define threshold in the parameters</p>
-<pre><code>### get word frequency from word_list and assign to a dictionary ###
- counts = Counter(word_list) # count word frequency and assign to a dictionary
-# print(counts)
-threshold_value = 20 # sets a threshold for the number of times a twitter user has used a word
-threshold_counts = {} # new dictionary with only words above threshold value
-for key, value in counts.items():
-if value &gt; threshold_value:
-threshold_counts[key] = value
-# print(len(threshold_counts))</code></pre></li>
-</ol>
-</div>
-<div id="wordcloud" class="slide section level1">
-<h1>WordCloud</h1>
-<ol style="list-style-type: decimal">
-<li>Import wordcloud package to generate a plot</li>
-<li>Input dictionary of word:frequency values</li>
-</ol>
-<pre><code>### wordcloud using threshold_counts ###
-### https://stackoverflow.com/questions/43043437/wordcloud-python-with-generate-from-frequencies?rq=1 ###
-wordcloud = WordCloud(width=900,height=500, max_words=1628,relative_scaling=1,
-normalize_plurals=True).generate_from_frequencies(threshold_counts)
-
-plt.imshow(wordcloud, interpolation=&#39;bilinear&#39;)
-plt.axis(&quot;off&quot;)
-plt.show()</code></pre>
-</div>
-<div id="results" class="slide section level1">
-<h1>RESULTS!</h1>
-<p><img src="src/visualization/tweet_word_cloud_realDonaldTrump.png" /></p>
-</div>
-<div id="next-steps" class="slide section level1">
-<h1>Next steps</h1>
-<ol style="list-style-type: decimal">
-<li>Clean the data</li>
-<li>Fix ‘b’ in front of some words (an artifact of the words being byte objects)</li>
-</ol>
-</div>
-</body>
-</html>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  <meta http-equiv="Content-Style-Type" content="text/css" />  <meta name="generator" content="pandoc" />  <title>Final_Project</title>  <style type="text/css">      code{white-space: pre-wrap;}      span.smallcaps{font-variant: small-caps;}      span.underline{text-decoration: underline;}      div.column{display: inline-block; vertical-align: top; width: 50%;}  </style>  <link rel="stylesheet" type="text/css" media="screen, projection, print"    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"    charset="utf-8" type="text/javascript"></script></head><body><div id="word-frequency-analysis-of-trumps-most-recent-tweets" class="slide section level1"><h1><strong>Word Frequency Analysis of Trumpï¿½s Most Recent Tweets</strong></h1><p>By Gianna Tricola and Michael Custance <img src="https://cdn.cnn.com/cnnnext/dam/assets/180219165402-20180219-trump-twitter-composite-generic-full-169.jpg" /></p></div><div id="twitter-as-a-data-source" class="slide section level1"><h1>Twitter as a data source</h1><ol style="list-style-type: decimal"><li>Public access</li><li>Diverse user base</li></ol><p><img src="https://cdn.wccftech.com/wp-content/uploads/2018/02/Twitter.jpeg" /></p></div><div id="trump-as-a-subject" class="slide section level1"><h1>Trump as a subject</h1><ol style="list-style-type: decimal"><li>Influential</li><li>Controversial</li><li>Entertaining</li></ol><p><img src="https://cdn-images-1.medium.com/max/1000/1*6G79y5SStkXsFVcgDU7wTw.jpeg" /></p></div><div id="word-frequency-analysis" class="slide section level1"><h1>Word Frequency Analysis</h1><p>Useful for linguistic analyses as they:</p><ul><li><p>give insight into the vernacular of individuals and groups of people in specific regions during particular periods of time.</p></li><li><p>provide information on trending topics</p></li></ul><p><img src="https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2017/06/14/blogtrumptweetenemypeoplerevised0.jpg" /></p></div><div id="first-steps" class="slide section level1"><h1>First Steps</h1><ol style="list-style-type: decimal"><li>Twitter account</li><li>Submit request for Twitter developer account</li><li>Access the API tokens / Consumer keys</li><li>Install Tweepy</li></ol><p><img src="https://d3hptxmced6nen.cloudfront.net/images/autotweet-documentation/twitter/twitterdev/twitterdev-tutorial-04.png" /></p></div><div id="import-twitter-data" class="slide section level1"><h1>Import Twitter Data</h1><ol style="list-style-type: decimal"><li>Import necessary packages</li><li>Assign APIï¿½s and Access Tokens to variables</li><li>Create function to pull data from twitter</li><li>Convert data into csv file</li></ol><pre><code> # import necessary packagesimport pip, csv, json, tweepy, fnmatch, stringimport numpy as npimport matplotlib.pyplot as pltimport pandas as pdimport seaborn as snsfrom collections import Counterfrom wordcloud import WordCloudfrom PIL import Image### get in twitter environment ###### source activate twitter ###consumer_key = &#39;kbMAphoqE5gMUJIofDwRAA8Mm&#39; # API Keyconsumer_secret = &#39;8XiLrPhol1L6FVxHGXgQgNEh0ngvUx5xlQUXny0ZiI6Q0Uue7I&#39; # API Secretaccess_key = &#39;878766942085156865-IOJccRODzhK4JsQGHfu0s6k5geBoZMs&#39; # Access Tokenaccess_secret = &#39;dlZbMrubLkzLTbnvq32htRoR4seZHrym4n2MxOwE0o0hx&#39; # Access Token Secret### ping a twitter account and extract tweets ###### https://gist.github.com/yanofsky/5436496 but change python2 things to python3 ###def get_all_tweets(screen_name):# Twitter only allows access to a users most recent ~3240 tweets with this method# authorize twitter, initialize tweepyauth = tweepy.OAuthHandler(consumer_key, consumer_secret)auth.set_access_token(access_key, access_secret)api = tweepy.API(auth)# initialize a list to hold all the tweepy Tweetsalltweets = []  # make initial request for most recent tweets (200 is the maximum allowed count)new_tweets = api.user_timeline(screen_name = screen_name,count=200)# save most recent tweets into alltweets listalltweets.extend(new_tweets)# save the id of the next tweet that wasn&#39;t originally pulledoldest = alltweets[-1].id - 1# keep grabbing tweets until there are no tweets left to grabwhile len(new_tweets) &gt; 0:    print(&quot;getting tweets before %s&quot; % (oldest))        # all subsequent requests use the max_id paramater to prevent duplicates and pull the next group of tweets    new_tweets = api.user_timeline(screen_name = screen_name,count=200,max_id=oldest)        # save most recent tweets into alltweets list    alltweets.extend(new_tweets)    # save the id of the next tweet that wasn&#39;t originally pulled    oldest = alltweets[-1].id - 1        print(&quot;...%s tweets downloaded so far&quot; % (len(alltweets)))# transform the tweepy tweets into a 2D array that will populate the csvouttweets = [[tweet.text.encode(&quot;utf-8&quot;)] for tweet in alltweets]# return outtweets# write utf-8 converted tweets into a csv filewith open(&#39;%s_tweets.csv&#39; % screen_name, &#39;w&#39;) as f:    writer = csv.writer(f)    writer.writerows(outtweets)pass  if __name__ == &#39;__main__&#39;:    # pass in the username of the account you want extract the tweets fromuser_name = &#39;realDonaldTrump&#39; # can input a different twitter handle here to analyzeget_all_tweets(user_name)# pd.read_csv(&#39;realDonaldTrump_tweets.csv&#39;)# name the CSV using the twitter handle you are analyzingfilename = &quot;%s_tweets.csv&quot; % (user_name)f2 = open(filename)</code></pre></div><div id="filter-the-data" class="slide section level1"><h1>Filter the data</h1><ol style="list-style-type: decimal"><li>Remove retweets</li><li>Exclude numbers, twitter handles, urls, prepositions, punctuation</li></ol><pre><code> ### split tweets into 2 lists: retweets and orig_tweets ###retweets = [] # can ignore this list, since we are not analyzing retweetsorig_tweets = []for tweet in f2: # print(tweet)if &quot;RT&quot; in tweet:    retweets.append(tweet)    # continue # if you want to skip these tweets rather than assigning them to the list retweetselse:    orig_tweets.append(tweet)# print(orig_tweets)# print(retweets)# print(len(orig_tweets))# print(len(retweets))### from orig_tweets, exclude words that contain numbers, @, or url&#39;s into word_list ###unwanted_word_list = []word_list = []for tweet in orig_tweets:    # print(tweet)fields = tweet.strip(&quot;\r\n&quot;).split() # splits strings in orig_tweets into lists of strings# print(fields)                       # where each word is it&#39;s own stringfor word in fields:    # print(word)    ### exclude meaningless words, twitter handles, numbers, and URLs ###    exclusions = [&quot;*https://*&quot;, &quot;*@*&quot;, &quot;*1*&quot;, &quot;*2*&quot;, &quot;*3*&quot;, &quot;*4*&quot;,     &quot;*5*&quot;, &quot;*6*&quot;, &quot;*7*&quot;, &quot;*8*&quot;, &quot;*9*&quot;, &quot;*0*&quot;, &quot;the&quot;, &quot;a&quot;, &quot;and&quot;, &quot;to&quot;, &quot;on&quot;, &quot;is&quot;, &quot;in&quot;, &quot;of&quot;, &quot;in&quot;,      &quot;for&quot;, &quot;with&quot;, &quot;that&quot;, &quot;be&quot;, &quot;will&quot;, &quot;it&quot;, &quot;as&quot;, &quot;was&quot;, &quot;at&quot;, &quot;are&quot;, &quot;this&quot;, &quot;from&quot;]    if any(fnmatch.fnmatch(word, exclusion) for exclusion in exclusions):        unwanted_word_list.append(word)        # continue # if you want to skip these tweets    else:        translator = str.maketrans(&#39;&#39;, &#39;&#39;, string.punctuation) # remove punctuation from word strings        word = word.translate(translator)        word_list.append(word.lower()) # make all characters lowercase so identical words don&#39;t read differently# print(unwanted_word_list)# print(word_list)# print(len(unwanted_word_list))# print(len(word_list))</code></pre></div><div id="processed-data" class="slide section level1"><h1>Processed data</h1><ol style="list-style-type: decimal"><li>Generate a dictionary that gives word: frequency as a key: value pair</li><li><p>Define threshold in the parameters</p><pre><code>### get word frequency from word_list and assign to a dictionary ### counts = Counter(word_list) # count word frequency and assign to a dictionary# print(counts)threshold_value = 20 # sets a threshold for the number of times a twitter user has used a wordthreshold_counts = {} # new dictionary with only words above threshold valuefor key, value in counts.items():if value &gt; threshold_value:threshold_counts[key] = value# print(len(threshold_counts))</code></pre></li></ol></div><div id="wordcloud" class="slide section level1"><h1>WordCloud</h1><ol style="list-style-type: decimal"><li>Import wordcloud package to generate a plot</li><li>Input dictionary of word:frequency values</li></ol><pre><code>### wordcloud using threshold_counts ###### https://stackoverflow.com/questions/43043437/wordcloud-python-with-generate-from-frequencies?rq=1 ###wordcloud = WordCloud(width=900,height=500, max_words=1628,relative_scaling=1,normalize_plurals=True).generate_from_frequencies(threshold_counts)plt.imshow(wordcloud, interpolation=&#39;bilinear&#39;)plt.axis(&quot;off&quot;)plt.show()</code></pre></div><div id="results" class="slide section level1"><h1>RESULTS!</h1><p><img src="src/visualization/tweet_word_cloud_realDonaldTrump2.png" /></p></div><div id="next-steps" class="slide section level1"><h1>Next steps</h1><ol style="list-style-type: decimal"><li>Clean the data</li><li>Fix ï¿½bï¿½ in front of some words (an artifact of the words being byte objects)</li></ol></div></body></html>
