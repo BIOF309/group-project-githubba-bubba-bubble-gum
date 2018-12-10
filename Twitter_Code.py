@@ -26,69 +26,73 @@ access_secret = 'dlZbMrubLkzLTbnvq32htRoR4seZHrym4n2MxOwE0o0hx' # Access Token S
 ### ping a twitter account and extract tweets ###
 ### https://gist.github.com/yanofsky/5436496 but change python2 things to python3 ###
 def get_all_tweets(screen_name):
+    # Twitter only allows access to a users most recent ~3240 tweets with this method
 
-	# Twitter only allows access to a users most recent ~3240 tweets with this method
+    # authorize twitter, initialize tweepy
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
 
-	# authorize twitter, initialize tweepy
-	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(access_key, access_secret)
-	api = tweepy.API(auth)
-	
-	# initialize a list to hold all the tweepy Tweets
-	alltweets = []	
-	
-	# make initial request for most recent tweets (200 is the maximum allowed count)
-	new_tweets = api.user_timeline(screen_name = screen_name,count=200)
-	
-	# save most recent tweets into alltweets list
-	alltweets.extend(new_tweets)
-	
-	# save the id of the next tweet that wasn't originally pulled
-	oldest = alltweets[-1].id - 1
-	
-	# keep grabbing tweets until there are no tweets left to grab
-	while len(new_tweets) > 0:
-		print("getting tweets before %s" % (oldest))
-		
-		# all subsequent requests use the max_id paramater to prevent duplicates and pull the next group of tweets
-		new_tweets = api.user_timeline(screen_name = screen_name,count=200,max_id=oldest)
-		
-		# save most recent tweets into alltweets list
-		alltweets.extend(new_tweets)
+    # initialize a list to hold all the tweepy Tweets
+    alltweets = []
+
+    # make initial request for most recent tweets (200 is the maximum allowed count)
+    new_tweets = api.user_timeline(screen_name=screen_name, count=200)
+
+    # save most recent tweets into alltweets list
+    alltweets.extend(new_tweets)
+
+    # save the id of the next tweet that wasn't originally pulled
+    oldest = alltweets[-1].id - 1
+
+    # keep grabbing tweets until there are no tweets left to grab
+    while len(new_tweets) > 0:
+        print("getting tweets before %s" % (oldest))
+
+        # all subsequent requests use the max_id paramater to prevent duplicates and pull the next group of tweets
+        new_tweets = api.user_timeline(screen_name=screen_name, count=200, max_id=oldest)
+
+        # save most recent tweets into alltweets list
+        alltweets.extend(new_tweets)
 
         # save the id of the next tweet that wasn't originally pulled
-		oldest = alltweets[-1].id - 1
-		
-		print("...%s tweets downloaded so far" % (len(alltweets)))
-	
-	# transform the tweepy tweets into a 2D array that will populate the csv
-	outtweets = [[tweet.text.encode("utf-8")] for tweet in alltweets]
+        oldest = alltweets[-1].id - 1
 
-	# return outtweets
+        print("...%s tweets downloaded so far" % (len(alltweets)))
+
+    # transform the tweepy tweets into a 2D array that will populate the csv
+    outtweets = [[tweet.text.encode("utf-8")] for tweet in alltweets]
 
 
-	# write utf-8 converted tweets into a csv file
-	with open('%s_tweets.csv' % screen_name, 'w') as f:
-		writer = csv.writer(f)
+     return outtweets
 
-		writer.writerows(outtweets)
-	
-	pass
+    # write utf-8 converted tweets into a csv file
+    #with open('%s_tweets.txt' % screen_name, 'w') as f:
+       # writer = csv.writer(f)
+
+       # writer.writerows(outtweets)
 
 
+    #pass
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     # pass in the username of the account you want extract the tweets from
-    user_name = 'realDonaldTrump' # can input a different twitter handle here to analyze
-    get_all_tweets(user_name)
+user_name = 'realDonaldTrump' # can input a different twitter handle here to analyze
+BRO = get_all_tweets(user_name)
 
-# pd.read_csv('realDonaldTrump_tweets.csv')
+
 
 
 # name the CSV using the twitter handle you are analyzing
-filename = "%s_tweets.csv" % (user_name)
+filename = "%s_tweets.txt" % (user_name)
 f2 = open(filename)
+f2
 
+def read_file(filename):
+    with open("%s_tweets" % (user_name), 'r') as f:
+        return f2.read()
+lines = [line for line in read_file('%s_tweets.txt' % (user_name)).split('\n') if line is not '']
+lines[1]
 ### split tweets into 2 lists: retweets and orig_tweets ###
 retweets = [] # can ignore this list, since we are not analyzing retweets
 orig_tweets = []
@@ -98,7 +102,7 @@ for tweet in f2:
         retweets.append(tweet)
         # continue # if you want to skip these tweets rather than assigning them to the list retweets
     else:
-        orig_tweets.append(tweet)
+        orig_tweets.append(tweet[1:])
 
 # print(orig_tweets)
 # print(retweets)
