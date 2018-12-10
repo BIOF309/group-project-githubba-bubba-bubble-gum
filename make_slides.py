@@ -1,3 +1,4 @@
+
 import pypandoc
 import doctest
 
@@ -16,11 +17,12 @@ def write_file(filename: str, contents: str) -> None:
         >>> with open(outfile_path) as file: file.read()
         'Test file contents'
     """
+
     with open(filename, 'w') as f:
         f.write(contents)
 
 
-def make_slides(path: str = 'slides.md', framework: str = 'slidy') -> str:
+def make_slides(path: str = 'FInal_Project.md', framework: str = 'slidy') -> str:
     """Writes contents to a file named filename
 
     Args:
@@ -63,4 +65,4 @@ def make_slides(path: str = 'slides.md', framework: str = 'slidy') -> str:
 
 if __name__ == '__main__':
     doctest.testmod(verbose=True)
-    write_file('slides.html', make_slides('FInal_Project.md'))
+    write_file('slides.html', make_slides('FInal_Project.md')
