@@ -45,20 +45,27 @@
    3. Create function to pull data from twitter 
    4. Convert data into a text file
    
- ![](src/Twitter%20environment.JPG)
- ![](src/get%20all%20tweets.JPG)
- ![](src/def%20read%20file.JPG)
-   
+ ![](src/twitter_env.JPG)
+ 
+# Write function to pull data from Twitter
+ 1. Define a function that accesses the twitter data 
+ 2. Create a list of the first 200 tweets
+ 3. Create a loop that continues to pull 200 tweets, generating a list of lists
+ 4. Write the list of lists as a text file
+ ![](src/def_get_all.JPG)
+ ![](src/while_len2.JPG)
+ ![](src/runusername.JPG)
+ ![](src/lines.JPG)
   
 # Clean the data 
  
-   1. Remove byte object character
-   2. Separate retweets from original tweets
-   3. Exclude numbers, twitter handles, urls, prepositions, punctuation
+   1. Separate retweets from original tweets
+   2. Exclude numbers, twitter handles, urls, prepositions, punctuation
+   3. Exclude conjunctions/prepositions 
    
- ![](src/remove%20b.JPG)
- ![](src/remover%20retweets.JPG)
- ![](src/exclusions.JPG)
+ ![](src/remove_retweets.JPG)
+ ![](src/exclusions1.JPG)
+ ![](src/exclusions2.JPG)
     
 # Processed data
  1. Generate a dictionary that gives word: frequency as a key: value pair
@@ -71,14 +78,18 @@
    1. Import wordcloud package to generate a plot
    2. Input dictionary of word:frequency values
 
- ![](src/wordcloud%20code.JPG)
+ ![](src/generate_wordcloud.JPG)
    
 # RESULTS!
 
 ![](src/visualization/tweet_word_cloud_realDonaldTrump.png)
 
+# Problems
+  1. Realizing our csv file was actually a text file 
+  2. Encoding with UTF-8 vs. Windows-1252
+  4. Pulling 280 characters vs. 140 characters from Twitter
+    
 
- 
 
     
     
