@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <title>Final_Project</title>
+  <title>FInal_Project</title>
   <style type="text/css">
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -67,16 +67,25 @@
 <li>Create function to pull data from twitter</li>
 <li>Convert data into a text file</li>
 </ol>
-<p><img src="src/Twitter%20environment.JPG" /> <img src="src/get%20all%20tweets.JPG" /> <img src="src/def%20read%20file.JPG" /></p>
+<p><img src="src/twitter_env.JPG" /></p>
+</div>
+<div id="write-function-to-pull-data-from-twitter" class="slide section level1">
+<h1>Write function to pull data from Twitter</h1>
+<ol style="list-style-type: decimal">
+<li>Define a function that accesses the twitter data</li>
+<li>Create a list of the first 200 tweets</li>
+<li>Create a loop that continues to pull 200 tweets, generating a list of lists</li>
+<li>Write the list of lists as a text file <img src="src/def_get_all.JPG" /> <img src="src/while_len2.JPG" /> <img src="src/runusername.JPG" /> <img src="src/lines.JPG" /></li>
+</ol>
 </div>
 <div id="clean-the-data" class="slide section level1">
 <h1>Clean the data</h1>
 <ol style="list-style-type: decimal">
-<li>Remover byte object character</li>
-<li>Remove retweets</li>
+<li>Separate retweets from original tweets</li>
 <li>Exclude numbers, twitter handles, urls, prepositions, punctuation</li>
+<li>Exclude conjunctions/prepositions</li>
 </ol>
-<p><img src="src/remove%20b.JPG" /> <img src="src/remover%20retweets.JPG" /> <img src="src/exclusions.JPG" /></p>
+<p><img src="src/remove_retweets.JPG" /> <img src="src/exclusions1.JPG" /> <img src="src/exclusions2.JPG" /></p>
 </div>
 <div id="processed-data" class="slide section level1">
 <h1>Processed data</h1>
@@ -92,11 +101,19 @@
 <li>Import wordcloud package to generate a plot</li>
 <li>Input dictionary of word:frequency values</li>
 </ol>
-<p><img src="src/wordcloud%20code.JPG" /></p>
+<p><img src="src/generate_wordcloud.JPG" /></p>
 </div>
 <div id="results" class="slide section level1">
 <h1>RESULTS!</h1>
-<p><img src="src/visualization/tweet_word_cloud_realDonaldTrump2.png" /></p>
+<p><img src="src/visualization/tweet_word_cloud_realDonaldTrump.png" /></p>
+</div>
+<div id="problems" class="slide section level1">
+<h1>Problems</h1>
+<ol style="list-style-type: decimal">
+<li>Realizing our csv file was actually a text file</li>
+<li>Encoding with UTF-8 vs. Windows-1252</li>
+<li>Pulling 280 characters vs. 140 characters from Twitter</li>
+</ol>
 </div>
 </body>
 </html>
