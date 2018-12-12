@@ -75,7 +75,7 @@
    
 # RESULTS!
 
-![](src/visualization/tweet_word_cloud_realDonaldTrump2.png)
+![](src/visualization/tweet_word_cloud_realDonaldTrump.png)
 
 
  
