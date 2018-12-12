@@ -42,8 +42,6 @@
 # Import Twitter Data
    1. Import necessary packages 
    2. Assign API's and Access Tokens to variables
-   3. Create function to pull data from twitter 
-   4. Convert data into a text file
    
  ![](src/twitter_env.JPG)
  
