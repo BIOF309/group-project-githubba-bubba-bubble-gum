@@ -50,10 +50,14 @@
  2. Create a list of the first 200 tweets
  3. Create a loop that continues to pull 200 tweets, generating a list of lists
  4. Write the list of lists as a text file
+ 
  ![](src/def_get_all.JPG)
  ![](src/while_len2.JPG)
+ ![](src/outtweets_output.JPG)
  ![](src/runusername.JPG)
+ ![](src/text_output.JPG)
  ![](src/lines.JPG)
+ ![](src/print_lines.JPG)
   
 # Clean the data 
  
@@ -62,6 +66,7 @@
    3. Exclude conjunctions/prepositions 
    
  ![](src/remove_retweets.JPG)
+ ![](src/tweets_retweets.JPG)
  ![](src/exclusions1.JPG)
  ![](src/exclusions2.JPG)
     
@@ -70,6 +75,7 @@
  2. Define threshold in the parameters 
 
  ![](src/counts.JPG)
+ ![](src/dictionary.JPG)
     
 
 # WordCloud 
